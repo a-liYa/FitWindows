@@ -26,6 +26,7 @@ allprojects {
         options.addStringOption('tag', 'date:a:date') // 指定@date标记
 //        options.addStringOption('Xdoclint:none', '-quiet') // 避免javadoc的检查
     }
+
 }
 
 task clean(type: Delete) {

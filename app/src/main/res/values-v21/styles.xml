@@ -1,0 +1,20 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!--Android 5.x开始需要把颜色设置透明，否则状态栏会呈现系统默认的浅灰色-->
+        <item name="android:statusBarColor">#33000000</item>
+
+        <!--确保状态栏显示，可能继承多次会被设置为false-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+    </style>
+
+</resources>

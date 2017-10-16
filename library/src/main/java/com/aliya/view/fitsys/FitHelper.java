@@ -30,7 +30,7 @@ public class FitHelper {
 
     public Rect fitSystemWindows(Rect insets) {
         if (insets != null) {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            if (fitType != STATUS_BOTTOM && Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
                 insets = new Rect(insets);
             }
             switch (fitType) {

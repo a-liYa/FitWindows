@@ -2,8 +2,12 @@ package com.aliya.view.fitsys;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 
 /**
  * 自定义拓展FitSystemWindow属性 - RecyclerView.
@@ -21,6 +25,8 @@ import android.util.AttributeSet;
  */
 public class FitWindowsRecyclerView extends RecyclerView {
 
+    Rect rectInsets;
+    WindowInsets windowInsets;
     private FitHelper helper;
 
     public FitWindowsRecyclerView(Context context) {
@@ -37,7 +43,30 @@ public class FitWindowsRecyclerView extends RecyclerView {
     }
 
     @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        super.addView(child, index, params);
+        if (windowInsets != null || rectInsets != null) { // 系统已分发过，此时需要手动分发给子View
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+                if (rectInsets != null) {
+                    super.fitSystemWindows(rectInsets);
+                }
+            } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                if (windowInsets != null) {
+                    child.dispatchApplyWindowInsets(windowInsets);
+                }
+            }
+        }
+    }
+
+    @Override
+    public WindowInsets dispatchApplyWindowInsets(WindowInsets insets) {
+        windowInsets = insets;
+        return super.dispatchApplyWindowInsets(insets);
+    }
+
+    @Override
     protected boolean fitSystemWindows(Rect insets) {
+        rectInsets = insets;
         return false & super.fitSystemWindows(helper.fitSystemWindows(insets));
     }
 

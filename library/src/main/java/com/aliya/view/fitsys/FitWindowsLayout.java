@@ -17,8 +17,8 @@ import android.widget.FrameLayout;
  */
 public class FitWindowsLayout extends FrameLayout {
 
-    WindowInsets windowInsets;
     Rect rectInsets;
+    WindowInsets windowInsets;
 
     public FitWindowsLayout(Context context) {
         super(context);

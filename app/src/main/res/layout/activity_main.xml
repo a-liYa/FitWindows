@@ -6,71 +6,89 @@
     android:orientation="vertical">
 
     <!--会阻断传递-->
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="#0f0"-->
-        <!--android:fitsSystemWindows="true">-->
-    <!--</LinearLayout>-->
-
     <com.aliya.view.fitsys.FitWindowsLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f00"
         android:fitsSystemWindows="true"
-        android:orientation="vertical"
-        app:fitType="top">
+        app:fitType="bottom">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="#345667" />
-
-        <com.aliya.view.fitsys.FitWindowsFrameLayout
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#345667" />-->
+        <com.aliya.view.fitsys.FitWindowsLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:fitsSystemWindows="true"
-            app:fitType="bottom">
-
-        </com.aliya.view.fitsys.FitWindowsFrameLayout>
+            android:background="#0f0"
+            android:fitsSystemWindows="true" />
 
     </com.aliya.view.fitsys.FitWindowsLinearLayout>
 
-    <com.aliya.view.fitsys.FitWindowsFrameLayout
+    <com.aliya.view.fitsys.FitWindowsLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="#f00"
+        android:background="#00f"
         android:fitsSystemWindows="true"
-        app:fitType="bottom">
+        app:fitType="top" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:background="#345667" />
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--android:background="#345667" />-->
 
-    </com.aliya.view.fitsys.FitWindowsFrameLayout>
+    <!--</com.aliya.view.fitsys.FitWindowsLinearLayout>-->
 
-    <com.aliya.view.fitsys.FitWindowsFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="#f00"
-        android:fitsSystemWindows="true">
+    <!--<com.aliya.view.fitsys.FitWindowsLinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="#f00"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--android:orientation="vertical"-->
+    <!--app:fitType="top">-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:background="#345667" />
 
-    </com.aliya.view.fitsys.FitWindowsFrameLayout>
+    <!--<com.aliya.view.fitsys.FitWindowsFrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--app:fitType="bottom">-->
 
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#0f0"
-    android:fitsSystemWindows="true">
-    </LinearLayout>
+    <!--</com.aliya.view.fitsys.FitWindowsFrameLayout>-->
+
+    <!--</com.aliya.view.fitsys.FitWindowsLinearLayout>-->
+
+    <!--<com.aliya.view.fitsys.FitWindowsFrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="#f00"-->
+    <!--android:fitsSystemWindows="true"-->
+    <!--app:fitType="bottom">-->
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:background="#345667" />-->
+
+    <!--</com.aliya.view.fitsys.FitWindowsFrameLayout>-->
+
+    <!--<com.aliya.view.fitsys.FitWindowsFrameLayout-->
+    <!--android:id="@+id/fit_frame"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:background="#f00">-->
+
+
+    <!--</com.aliya.view.fitsys.FitWindowsFrameLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="#0f0"-->
+    <!--android:fitsSystemWindows="true"></LinearLayout>-->
 
 </LinearLayout>

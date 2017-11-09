@@ -67,7 +67,24 @@ public class FitWindowsRelativeLayout extends RelativeLayout {
     @Override
     protected boolean fitSystemWindows(Rect insets) {
         rectInsets = insets;
-        return false & super.fitSystemWindows(helper.fitSystemWindows(insets));
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            if (getFitsSystemWindows()) {
+                setFitsSystemWindows(false);
+                int left = insets.left;
+                int top = insets.top;
+                int right = insets.right;
+                int bottom = insets.bottom;
+                super.fitSystemWindows(insets);
+                insets.set(left, top, right, bottom);
+                setFitsSystemWindows(true);
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (getFitsSystemWindows()) {
+                insets = helper.fitSystemWindows(insets);
+            }
+        }
+        return false & super.fitSystemWindows(insets);
     }
 
 }

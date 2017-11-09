@@ -59,4 +59,5 @@ public class FitWindowsLayout extends FrameLayout {
         rectInsets = insets;
         return super.fitSystemWindows(insets);
     }
+
 }

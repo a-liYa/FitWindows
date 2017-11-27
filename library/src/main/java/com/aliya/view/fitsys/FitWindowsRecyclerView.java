@@ -48,7 +48,7 @@ public class FitWindowsRecyclerView extends RecyclerView {
         if (windowInsets != null || rectInsets != null) { // 系统已分发过，此时需要手动分发给子View
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
                 if (rectInsets != null) {
-                    super.fitSystemWindows(rectInsets);
+//                    super.fitSystemWindows(rectInsets); // 重复分发其他孩子
                 }
             } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                 if (windowInsets != null) {
@@ -66,7 +66,7 @@ public class FitWindowsRecyclerView extends RecyclerView {
 
     @Override
     protected boolean fitSystemWindows(Rect insets) {
-        rectInsets = insets;
+        rectInsets = new Rect(insets);
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             if (getFitsSystemWindows()) {
                 setFitsSystemWindows(false);

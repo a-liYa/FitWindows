@@ -66,7 +66,7 @@ public class FitWindowsFrameLayout extends FrameLayout {
 
     @Override
     protected boolean fitSystemWindows(Rect insets) {
-        rectInsets = insets;
+        rectInsets = new Rect(insets);
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             if (getFitsSystemWindows()) {
                 setFitsSystemWindows(false);

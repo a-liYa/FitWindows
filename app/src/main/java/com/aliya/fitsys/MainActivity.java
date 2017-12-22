@@ -2,7 +2,6 @@ package com.aliya.fitsys;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ public class MainActivity extends Activity {
     }
 
     public void onClick(View view) {
-        Log.e("TAG", "onClick");
         View inflate = LayoutInflater.from(this).inflate(R.layout.layout_item, rootView, false);
         rootView.addView(inflate);
     }

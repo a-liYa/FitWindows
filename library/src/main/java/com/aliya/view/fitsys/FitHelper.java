@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowInsets;
 
+import java.lang.reflect.Method;
+
 /**
  * fitSystemWindow - 助手
  *
@@ -96,7 +98,14 @@ public class FitHelper {
         // 若系统已分发过，需要手动分发给子View
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             if (rectInsets != null) {
-                mProxy.fitSystemWindowsProxy(new Rect(rectInsets), false);
+                try { // 反射调用
+                    Method method = View.class
+                            .getDeclaredMethod("fitSystemWindows", Rect.class);
+                    method.setAccessible(true);
+                    method.invoke(child, new Rect(rectInsets));
+                } catch (Exception e) {
+                    mProxy.fitSystemWindowsProxy(new Rect(rectInsets), false);
+                }
             }
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             if (windowInsets != null && windowInsets instanceof WindowInsets) {

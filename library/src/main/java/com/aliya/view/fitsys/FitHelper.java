@@ -61,7 +61,7 @@ public class FitHelper {
                 int top = insets.top;
                 int right = insets.right;
                 int bottom = insets.bottom;
-                mProxy.fitSuperSystemWindows(insets);
+                mProxy.fitSystemWindowsProxy(insets, true);
                 insets.set(left, top, right, bottom);
                 mProxy.setFitsSystemWindows(true);
             }
@@ -71,7 +71,7 @@ public class FitHelper {
                 insets = fitInsets(insets);
             }
         }
-        return false & mProxy.fitSuperSystemWindows(insets);
+        return false & mProxy.fitSystemWindowsProxy(insets, true);
     }
 
     public Rect fitInsets(Rect insets) {
@@ -96,7 +96,7 @@ public class FitHelper {
         // 若系统已分发过，需要手动分发给子View
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             if (rectInsets != null) {
-                mProxy.fitSuperSystemWindows(new Rect(rectInsets));
+                mProxy.fitSystemWindowsProxy(new Rect(rectInsets), false);
             }
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             if (windowInsets != null && windowInsets instanceof WindowInsets) {
@@ -107,7 +107,7 @@ public class FitHelper {
 
     public interface FitWindowsProxy {
 
-        boolean fitSuperSystemWindows(Rect insets);
+        boolean fitSystemWindowsProxy(Rect insets, boolean callSuper);
 
         void setFitsSystemWindows(boolean fitSystemWindows);
 

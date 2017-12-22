@@ -67,8 +67,8 @@ public class FitWindowsRelativeLayout extends RelativeLayout implements FitHelpe
     }
 
     @Override
-    public boolean fitSuperSystemWindows(Rect insets) {
-        return super.fitSystemWindows(insets);
+    public boolean fitSystemWindowsProxy(Rect insets, boolean callSuper) {
+        return callSuper ? super.fitSystemWindows(insets) : fitSystemWindows(insets);
     }
 
 }

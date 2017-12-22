@@ -64,8 +64,8 @@ public class FitWindowsRecyclerView extends RecyclerView implements FitHelper.Fi
     }
 
     @Override
-    public boolean fitSuperSystemWindows(Rect insets) {
-        return super.fitSystemWindows(insets);
+    public boolean fitSystemWindowsProxy(Rect insets, boolean callSuper) {
+        return callSuper ? super.fitSystemWindows(insets) : fitSystemWindows(insets);
     }
 
 }

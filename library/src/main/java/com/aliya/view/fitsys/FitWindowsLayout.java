@@ -15,48 +15,51 @@ import android.widget.FrameLayout;
  * @author a_liYa
  * @date 2017/7/29 16:46.
  */
-public class FitWindowsLayout extends FrameLayout {
+public class FitWindowsLayout extends FrameLayout implements FitHelper.FitWindowsProxy {
 
-    Rect rectInsets;
-    WindowInsets windowInsets;
+    private FitHelper helper;
 
     public FitWindowsLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public FitWindowsLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public FitWindowsLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            helper = new FitHelper(context, attrs, this);
+        }
     }
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
-        if (windowInsets != null || rectInsets != null) { // 系统已分发过，此时需要手动分发给子View
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-                if (rectInsets != null) {
-                    super.fitSystemWindows(rectInsets);
-                }
-            } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                if (windowInsets != null) {
-                    child.dispatchApplyWindowInsets(windowInsets);
-                }
-            }
+        if (helper != null) {
+            helper.fitChildView(child);
         }
     }
 
     @Override
     public WindowInsets dispatchApplyWindowInsets(WindowInsets insets) {
-        windowInsets = insets;
+        if (helper != null) {
+            helper.setWindowInsets(insets);
+        }
         return super.dispatchApplyWindowInsets(insets);
     }
 
     @Override
     protected boolean fitSystemWindows(Rect insets) {
-        rectInsets = insets;
+        if (helper != null) {
+            helper.setRectInsets(insets);
+        }
+        return super.fitSystemWindows(insets);
+    }
+
+    @Override
+    public boolean fitSuperSystemWindows(Rect insets) {
         return super.fitSystemWindows(insets);
     }
 

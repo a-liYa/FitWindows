@@ -23,10 +23,8 @@ import android.view.WindowInsets;
  * @author a_liYa
  * @date 2017/8/21 10:04.
  */
-public class FitWindowsRecyclerView extends RecyclerView {
+public class FitWindowsRecyclerView extends RecyclerView implements FitHelper.FitWindowsProxy {
 
-    Rect rectInsets;
-    WindowInsets windowInsets;
     private FitHelper helper;
 
     public FitWindowsRecyclerView(Context context) {
@@ -39,52 +37,35 @@ public class FitWindowsRecyclerView extends RecyclerView {
 
     public FitWindowsRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        helper = new FitHelper(context, attrs);
-    }
-
-    @Override
-    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        super.addView(child, index, params);
-        if (windowInsets != null || rectInsets != null) { // 系统已分发过，此时需要手动分发给子View
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-                if (rectInsets != null) {
-//                    super.fitSystemWindows(rectInsets); // 重复分发其他孩子
-                }
-            } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                if (windowInsets != null) {
-                    child.dispatchApplyWindowInsets(windowInsets);
-                }
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            helper = new FitHelper(context, attrs, this);
         }
     }
 
     @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        super.addView(child, index, params); // 此处暂时无分发给Child的需求
+    }
+
+    @Override
     public WindowInsets dispatchApplyWindowInsets(WindowInsets insets) {
-        windowInsets = insets;
+        if (helper != null) {
+            helper.setWindowInsets(insets);
+        }
         return super.dispatchApplyWindowInsets(insets);
     }
 
     @Override
     protected boolean fitSystemWindows(Rect insets) {
-        rectInsets = new Rect(insets);
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            if (getFitsSystemWindows()) {
-                setFitsSystemWindows(false);
-                int left = insets.left;
-                int top = insets.top;
-                int right = insets.right;
-                int bottom = insets.bottom;
-                super.fitSystemWindows(insets);
-                insets.set(left, top, right, bottom);
-                setFitsSystemWindows(true);
-            }
+        if (helper != null) {
+            return helper.fitSystemWindows(insets);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            if (getFitsSystemWindows()) {
-                insets = helper.fitSystemWindows(insets);
-            }
-        }
-        return false & super.fitSystemWindows(insets);
+        return super.fitSystemWindows(insets);
+    }
+
+    @Override
+    public boolean fitSuperSystemWindows(Rect insets) {
+        return super.fitSystemWindows(insets);
     }
 
 }

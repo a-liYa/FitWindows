@@ -45,6 +45,12 @@ public class FitWindowsRecyclerView extends RecyclerView implements FitHelper.Fi
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         super.addView(child, index, params); // 此处暂时无分发给Child的需求
+        if (child != null) {
+            Object tag = child.getTag(R.id.tag_fit_child);
+            if (tag instanceof Boolean && tag == Boolean.TRUE) {
+                helper.fitChildView(child);
+            }
+        }
     }
 
     @Override

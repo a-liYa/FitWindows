@@ -11,17 +11,14 @@ import android.view.WindowInsets;
 
 /**
  * 自定义拓展FitSystemWindow属性 - RecyclerView.
- * 可分别适配状态栏和导航栏
  * <p>
- * 通过自定属性fitType来设置:
- * <code>
- * app:fitType="both"      // 默认属性
- * app:fitType="top"       // fit仅适配状态栏
- * app:fitType="bottom"    // fit仅适配导航栏
- * </code>
+ * 因 RecyclerView child view 频繁添加删除，默认不会分发 child view，
+ * 只有 child view 设置 setTag(R.id.tag_need_fit_child, true).
+ * <p/>
  *
  * @author a_liYa
  * @date 2017/8/21 10:04.
+ * @see FitHelper
  */
 public class FitWindowsRecyclerView extends RecyclerView implements FitHelper.FitWindowsProxy {
 
@@ -44,11 +41,11 @@ public class FitWindowsRecyclerView extends RecyclerView implements FitHelper.Fi
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        super.addView(child, index, params); // 此处暂时无分发给Child的需求
-        if (child != null) {
-            Object tag = child.getTag(R.id.tag_fit_child);
-            if (tag instanceof Boolean && tag == Boolean.TRUE) {
-                helper.fitChildView(child);
+        super.addView(child, index, params);
+        if (helper != null && child != null) {
+            // 待优化，因child会频繁删除添加，当第二次添加时对比是否已经分发。
+            if (child.getTag(R.id.tag_need_fit_child) == Boolean.TRUE) {
+                helper.fitInsetsChildView(child);
             }
         }
     }

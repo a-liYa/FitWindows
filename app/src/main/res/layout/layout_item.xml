@@ -5,5 +5,4 @@
     android:background="@color/colorAccent"
     android:fitsSystemWindows="true">
 
-
 </FrameLayout>

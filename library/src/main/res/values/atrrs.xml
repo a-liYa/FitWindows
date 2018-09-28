@@ -3,11 +3,18 @@
 
     <!--FitSystemWindow-->
     <declare-styleable name="FitSystemWindow">
+
         <attr name="fitType">
             <enum name="both" value="0" />
             <enum name="top" value="1" />
             <enum name="bottom" value="2" />
         </attr>
+
+        <!--是否忽略 fitSystemWindows 的事件消费-->
+        <attr name="fitIgnoreConsume" format="boolean" />
+        <!--是否分发给未来添加的子View-->
+        <attr name="fitFutureChild" format="boolean" />
+
     </declare-styleable>
 
 </resources>

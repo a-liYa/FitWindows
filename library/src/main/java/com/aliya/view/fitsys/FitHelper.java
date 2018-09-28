@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowInsets;
@@ -12,6 +14,24 @@ import java.lang.reflect.Method;
 
 /**
  * fitSystemWindow - 助手
+ * <p>
+ * 1. 可以分别适配状态栏和导航栏, 通过自定属性fitType来设置:
+ * <code>
+ * app:fitType="both"      // 默认属性
+ * app:fitType="top"       // fit仅适配状态栏
+ * app:fitType="bottom"    // fit仅适配导航栏
+ * </code>
+ * </p>
+ * 2. 忽略 fitSystemWindows 的事件消费:
+ * <code>
+ * app:fitSystemWindows="true"  // 默认false
+ * </code>
+ * <p>
+ * 3. 分发给未来添加的子View:
+ * <code>
+ * app:fitFutureChild="true"    // 默认false
+ * </code>
+ * </p>
  *
  * @author a_liYa
  * @date 2017/7/19 11:16.
@@ -22,7 +42,9 @@ public class FitHelper {
     public static final int STATUS_TOP = 1;
     public static final int STATUS_BOTTOM = 2;
 
-    private int fitType = STATUS_BOTH;
+    int fitType = STATUS_BOTH;
+    boolean fitIgnoreConsume;   // 是否忽略 fitSystemWindows 的事件消费, 默认 false
+    boolean fitFutureChild;     // 是否分发给未来添加的子View, 默认 false
 
     Rect rectInsets;
     Object windowInsets;
@@ -38,13 +60,17 @@ public class FitHelper {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FitSystemWindow);
             fitType = a.getInt(R.styleable.FitSystemWindow_fitType, STATUS_BOTH);
+            fitIgnoreConsume = a.getBoolean(R.styleable.FitSystemWindow_fitIgnoreConsume, false);
+            fitFutureChild = a.getBoolean(R.styleable.FitSystemWindow_fitFutureChild, false);
             a.recycle();
         }
     }
 
-    public void setRectInsets(Rect insets) {
-        if (rectInsets == null || !rectInsets.equals(insets)) {
+    private void setRectInsets(Rect insets) {
+        if (rectInsets == null) {
             rectInsets = new Rect(insets);
+        } else if (!rectInsets.equals(insets)) {
+            rectInsets.set(insets);
         }
     }
 
@@ -54,26 +80,25 @@ public class FitHelper {
 
     public boolean fitSystemWindows(Rect insets) {
         setRectInsets(insets);
-        if (mProxy == null) return false;
 
+        // 4.4 系统兼容 fitIgnoreConsume 属性的处理逻辑
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            if (mProxy.getFitsSystemWindows()) {
+            if (mProxy.getFitsSystemWindows() && fitIgnoreConsume) {
                 mProxy.setFitsSystemWindows(false);
-                int left = insets.left;
-                int top = insets.top;
-                int right = insets.right;
-                int bottom = insets.bottom;
+                final int left = insets.left;
+                final int top = insets.top;
+                final int right = insets.right;
+                final int bottom = insets.bottom;
                 mProxy.fitSystemWindowsProxy(insets, true);
                 insets.set(left, top, right, bottom);
                 mProxy.setFitsSystemWindows(true);
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            if (mProxy.getFitsSystemWindows()) {
-                insets = fitInsets(insets);
-            }
+
+        if (mProxy.getFitsSystemWindows()) {
+            insets = fitInsets(insets);
         }
-        return false & mProxy.fitSystemWindowsProxy(insets, true);
+        return !fitIgnoreConsume & mProxy.fitSystemWindowsProxy(insets, true);
     }
 
     public Rect fitInsets(Rect insets) {
@@ -93,24 +118,38 @@ public class FitHelper {
         return insets;
     }
 
-    public void fitChildView(View child) {
-        if (child == null || mProxy == null) return;
+    /**
+     * dispatch WindowInsets to child view.
+     *
+     * @param child child view.
+     * @see ViewCompat#requestApplyInsets(View)
+     */
+    public void fitInsetsChildView(View child) {
+        if (!fitFutureChild || child == null || mProxy == null) return;
+
         // 若系统已分发过，需要手动分发给子View
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            if (rectInsets != null) {
-                try { // 反射调用
-                    Method method = View.class
-                            .getDeclaredMethod("fitSystemWindows", Rect.class);
-                    method.setAccessible(true);
-                    method.invoke(child, new Rect(rectInsets));
-                } catch (Exception e) {
-                    mProxy.fitSystemWindowsProxy(new Rect(rectInsets), false);
-                }
-            }
+            dispatchApplyWindowInsetsForKitkat(child);
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            if (windowInsets != null && windowInsets instanceof WindowInsets) {
-                child.dispatchApplyWindowInsets((WindowInsets) windowInsets);
+            dispatchApplyWindowInsets(child);
+        }
+    }
+
+    private void dispatchApplyWindowInsetsForKitkat(View child) {
+        if (rectInsets != null) {
+            try {
+                Method method = View.class.getDeclaredMethod("fitSystemWindows", Rect.class);
+                method.setAccessible(true);
+                method.invoke(child, new Rect(rectInsets));
+            } catch (Exception e) { // no-op
             }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT_WATCH)
+    private void dispatchApplyWindowInsets(View child) {
+        if (windowInsets != null && windowInsets instanceof WindowInsets) {
+            child.dispatchApplyWindowInsets((WindowInsets) windowInsets);
         }
     }
 

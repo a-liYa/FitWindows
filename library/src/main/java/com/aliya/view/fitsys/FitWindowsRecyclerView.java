@@ -14,7 +14,7 @@ import android.view.WindowInsets;
  * <p>
  * 因 RecyclerView child view 频繁添加删除，默认不会分发 child view，
  * 只有 child view 设置 setTag(R.id.tag_need_fit_child, true).
- * <p/>
+ * </p>
  *
  * @author a_liYa
  * @date 2017/8/21 10:04.

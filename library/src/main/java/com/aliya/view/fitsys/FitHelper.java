@@ -1,9 +1,9 @@
 package com.aliya.view.fitsys;
 
-import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -50,15 +50,15 @@ public class FitHelper {
     Object windowInsets;
     FitWindowsProxy mProxy;
 
-    @Deprecated
-    public FitHelper(Context context, AttributeSet attrs) {
-        this(context, attrs, null);
-    }
+    @Nullable
+    View mTarget;
 
-    public FitHelper(Context context, AttributeSet attrs, FitWindowsProxy proxy) {
+    public FitHelper(View view, AttributeSet attrs, FitWindowsProxy proxy) {
         mProxy = proxy;
+        mTarget = view;
         if (attrs != null) {
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FitSystemWindow);
+            TypedArray a = mTarget.getContext()
+                    .obtainStyledAttributes(attrs, R.styleable.FitSystemWindow);
             fitType = a.getInt(R.styleable.FitSystemWindow_fitType, STATUS_BOTH);
             fitIgnoreConsume = a.getBoolean(R.styleable.FitSystemWindow_fitIgnoreConsume, false);
             fitFutureChild = a.getBoolean(R.styleable.FitSystemWindow_fitFutureChild, false);
@@ -78,24 +78,25 @@ public class FitHelper {
         this.windowInsets = insets;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public boolean fitSystemWindows(Rect insets) {
         setRectInsets(insets);
 
         // 4.4 系统兼容 fitIgnoreConsume 属性的处理逻辑
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-            if (mProxy.getFitsSystemWindows() && fitIgnoreConsume) {
-                mProxy.setFitsSystemWindows(false);
+            if (mTarget.getFitsSystemWindows() && fitIgnoreConsume) {
+                mTarget.setFitsSystemWindows(false);
                 final int left = insets.left;
                 final int top = insets.top;
                 final int right = insets.right;
                 final int bottom = insets.bottom;
                 mProxy.fitSystemWindowsProxy(insets, true);
                 insets.set(left, top, right, bottom);
-                mProxy.setFitsSystemWindows(true);
+                mTarget.setFitsSystemWindows(true);
             }
         }
 
-        if (mProxy.getFitsSystemWindows()) {
+        if (mTarget.getFitsSystemWindows()) {
             insets = fitInsets(insets);
         }
         return !fitIgnoreConsume & mProxy.fitSystemWindowsProxy(insets, true);
@@ -156,11 +157,5 @@ public class FitHelper {
     public interface FitWindowsProxy {
 
         boolean fitSystemWindowsProxy(Rect insets, boolean callSuper);
-
-        void setFitsSystemWindows(boolean fitSystemWindows);
-
-        boolean getFitsSystemWindows();
-
     }
-
 }

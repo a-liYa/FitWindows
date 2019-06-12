@@ -4,7 +4,7 @@
 ### 一、依赖
 
 ```
-compile 'com.aliya:fitwindow:0.1.5'
+compile 'com.aliya:fitwindow:2.0.0'
 ```
 
 ### 二、使用

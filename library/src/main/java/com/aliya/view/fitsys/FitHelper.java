@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  * </p>
  * 2. 忽略 fitSystemWindows 的事件消费:
  * <code>
- * app:fitSystemWindows="true"  // 默认false
+ * app:fitIgnoreConsume="true"  // 默认false
  * </code>
  * <p>
  * 3. 分发给未来添加的子View:
